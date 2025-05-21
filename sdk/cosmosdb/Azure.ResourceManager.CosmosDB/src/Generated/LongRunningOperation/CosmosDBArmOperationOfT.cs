@@ -23,6 +23,8 @@ namespace Azure.ResourceManager.CosmosDB
         private readonly RehydrationToken? _completeRehydrationToken;
         private readonly NextLinkOperationImplementation _nextLinkOperation;
         private readonly string _operationId;
+        private T _value;
+        private BinaryData _rawData;
 
         /// <summary> Initializes a new instance of CosmosDBArmOperation for mocking. </summary>
         protected CosmosDBArmOperation()
@@ -68,7 +70,7 @@ namespace Azure.ResourceManager.CosmosDB
         public override RehydrationToken? GetRehydrationToken() => _nextLinkOperation?.GetRehydrationToken() ?? _completeRehydrationToken;
 
         /// <inheritdoc />
-        public override T Value => _operation.Value;
+        public override T Value => _value ??= _rawData.ToObjectFromJson<T>(AzureResourceManagerCosmosDBJsonContext.Default.GetTypeInfo(typeof(T)));
 
         /// <inheritdoc />
         public override bool HasValue => _operation.HasValue;

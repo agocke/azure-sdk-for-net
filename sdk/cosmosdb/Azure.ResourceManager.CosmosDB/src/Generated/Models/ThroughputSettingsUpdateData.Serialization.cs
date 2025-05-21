@@ -147,7 +147,11 @@ namespace Azure.ResourceManager.CosmosDB.Models
                     {
                         if (property0.NameEquals("resource"u8))
                         {
-                            resource = ThroughputSettingsResourceInfo.DeserializeThroughputSettingsResourceInfo(property0.Value, options);
+                            if (property0.Value.ValueKind == JsonValueKind.Null)
+                            {
+                                continue;
+                            }
+                            resource = JsonSerializer.Deserialize(property0.Value.GetRawText(), AzureResourceManagerCosmosDBJsonContext.Default.ThroughputSettingsUpdateData);
                             continue;
                         }
                     }

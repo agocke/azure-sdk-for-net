@@ -91,7 +91,7 @@ namespace Azure.ResourceManager.CosmosDB.Models
                     List<WritableSubResource> array = new List<WritableSubResource>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(JsonSerializer.Deserialize<WritableSubResource>(item.GetRawText()));
+                        array.Add(JsonSerializer.Deserialize(item.GetRawText(), AzureResourceManagerCosmosDBJsonContext.Default.WritableSubResource));
                     }
                     physicalPartitionIds = array;
                     continue;

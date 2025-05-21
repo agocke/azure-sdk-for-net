@@ -98,7 +98,7 @@ namespace Azure.ResourceManager.CosmosDB
                     {
                         continue;
                     }
-                    systemData = JsonSerializer.Deserialize<SystemData>(property.Value.GetRawText());
+                    systemData = JsonSerializer.Deserialize(property.Value.GetRawText(), AzureResourceManagerCosmosDBJsonContext.Default.SystemData);
                     continue;
                 }
                 if (property.NameEquals("properties"u8))

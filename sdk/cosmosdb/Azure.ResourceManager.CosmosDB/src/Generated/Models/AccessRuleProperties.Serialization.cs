@@ -58,7 +58,7 @@ namespace Azure.ResourceManager.CosmosDB.Models
                 writer.WriteStartArray();
                 foreach (var item in Subscriptions)
                 {
-                    JsonSerializer.Serialize(writer, item);
+                    JsonSerializer.Serialize(writer, item, AzureResourceManagerCosmosDBJsonContext.Default.WritableSubResource);
                 }
                 writer.WriteEndArray();
             }
@@ -112,7 +112,7 @@ namespace Azure.ResourceManager.CosmosDB.Models
 #else
                     using (JsonDocument document = JsonDocument.Parse(item.Value, ModelSerializationExtensions.JsonDocumentOptions))
                     {
-                        JsonSerializer.Serialize(writer, document.RootElement);
+                        JsonSerializer.Serialize(writer, document.RootElement, AzureResourceManagerCosmosDBJsonContext.Default.WritableSubResource);
                     }
 #endif
                 }
@@ -182,7 +182,7 @@ namespace Azure.ResourceManager.CosmosDB.Models
                     List<WritableSubResource> array = new List<WritableSubResource>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(JsonSerializer.Deserialize<WritableSubResource>(item.GetRawText()));
+                        array.Add(JsonSerializer.Deserialize(item.GetRawText(), AzureResourceManagerCosmosDBJsonContext.Default.WritableSubResource));
                     }
                     subscriptions = array;
                     continue;
