@@ -43,7 +43,7 @@ namespace Azure.ResourceManager.Resources.Models
             if (Optional.IsDefined(Identity))
             {
                 writer.WritePropertyName("identity"u8);
-                JsonSerializer.Serialize(writer, Identity);
+                ModelSerializationExtensions.JsonSerialize(writer, Identity, options: null);
             }
             writer.WritePropertyName("properties"u8);
             writer.WriteStartObject();
@@ -128,7 +128,8 @@ namespace Azure.ResourceManager.Resources.Models
                     {
                         continue;
                     }
-                    identity = JsonSerializer.Deserialize<ManagedServiceIdentity>(property.Value.GetRawText());
+                    identity = ModelSerializationExtensions.JsonDeserialize<ManagedServiceIdentity>(property.Value.GetRawText(), options: null);
+                    identity = ModelSerializationExtensions.JsonDeserialize<ManagedServiceIdentity>(property.Value.GetRawText(), options: null);
                     continue;
                 }
                 if (property.NameEquals("properties"u8))

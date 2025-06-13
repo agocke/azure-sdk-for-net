@@ -42,7 +42,7 @@ namespace Azure.ResourceManager.Resources
             if (Optional.IsDefined(Plan))
             {
                 writer.WritePropertyName("plan"u8);
-                JsonSerializer.Serialize(writer, Plan);
+                ModelSerializationExtensions.JsonSerialize(writer, Plan, options: null);
             }
             if (Optional.IsDefined(Properties))
             {
@@ -74,7 +74,7 @@ namespace Azure.ResourceManager.Resources
             if (Optional.IsDefined(Identity))
             {
                 writer.WritePropertyName("identity"u8);
-                JsonSerializer.Serialize(writer, Identity);
+                ModelSerializationExtensions.JsonSerialize(writer, Identity, options: null);
             }
             if (options.Format != "W" && Optional.IsDefined(CreatedOn))
             {
@@ -139,7 +139,7 @@ namespace Azure.ResourceManager.Resources
                     {
                         continue;
                     }
-                    plan = JsonSerializer.Deserialize<ArmPlan>(property.Value.GetRawText());
+                    plan = ModelSerializationExtensions.JsonDeserialize<ArmPlan>(property.Value.GetRawText(), options: null);
                     continue;
                 }
                 if (property.NameEquals("properties"u8))
@@ -176,7 +176,7 @@ namespace Azure.ResourceManager.Resources
                     {
                         continue;
                     }
-                    identity = JsonSerializer.Deserialize<ManagedServiceIdentity>(property.Value.GetRawText());
+                    identity = ModelSerializationExtensions.JsonDeserialize<ManagedServiceIdentity>(property.Value.GetRawText(), options: null);
                     continue;
                 }
                 if (property.NameEquals("createdTime"u8))
@@ -208,7 +208,7 @@ namespace Azure.ResourceManager.Resources
                     {
                         continue;
                     }
-                    extendedLocation = JsonSerializer.Deserialize<ExtendedLocation>(property.Value.GetRawText());
+                    extendedLocation = ModelSerializationExtensions.JsonDeserialize<ExtendedLocation>(property.Value.GetRawText(), options: null);
                     continue;
                 }
                 if (property.NameEquals("tags"u8))
@@ -251,7 +251,7 @@ namespace Azure.ResourceManager.Resources
                     {
                         continue;
                     }
-                    systemData = JsonSerializer.Deserialize<SystemData>(property.Value.GetRawText());
+                    systemData = ModelSerializationExtensions.JsonDeserialize<SystemData>(property.Value.GetRawText(), options: null);
                     continue;
                 }
                 if (options.Format != "W")

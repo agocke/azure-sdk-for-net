@@ -47,7 +47,7 @@ namespace Azure.ResourceManager.Resources
             if (Optional.IsDefined(ManagedIdentity))
             {
                 writer.WritePropertyName("identity"u8);
-                JsonSerializer.Serialize(writer, ManagedIdentity);
+                ModelSerializationExtensions.JsonSerialize(writer, ManagedIdentity, options: null);
             }
             writer.WritePropertyName("properties"u8);
             writer.WriteStartObject();
@@ -198,7 +198,7 @@ namespace Azure.ResourceManager.Resources
                     {
                         continue;
                     }
-                    identity = JsonSerializer.Deserialize<ManagedServiceIdentity>(property.Value.GetRawText());
+                    identity = ModelSerializationExtensions.JsonDeserialize<ManagedServiceIdentity>(property.Value.GetRawText(), options: null);
                     continue;
                 }
                 if (property.NameEquals("id"u8))
@@ -222,7 +222,7 @@ namespace Azure.ResourceManager.Resources
                     {
                         continue;
                     }
-                    systemData = JsonSerializer.Deserialize<SystemData>(property.Value.GetRawText());
+                    systemData = ModelSerializationExtensions.JsonDeserialize<SystemData>(property.Value.GetRawText(), options: null);
                     continue;
                 }
                 if (property.NameEquals("properties"u8))

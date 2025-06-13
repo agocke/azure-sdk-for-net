@@ -58,8 +58,7 @@ namespace Azure.ResourceManager.Resources
             {
                 return null;
             }
-            var lroDetails = ModelReaderWriter.Write(rehydrationToken, ModelReaderWriterOptions.Json, AzureResourceManagerContext.Default).ToObjectFromJson<Dictionary<string, string>>();
-            return lroDetails["id"];
+            return rehydrationToken.Value.Id;
         }
         /// <inheritdoc />
         public override string Id => _operationId ?? NextLinkOperationImplementation.NotSet;

@@ -50,7 +50,7 @@ namespace Azure.ResourceManager.Resources.Models
             if (Optional.IsDefined(Error))
             {
                 writer.WritePropertyName("error"u8);
-                JsonSerializer.Serialize(writer, Error);
+                ModelSerializationExtensions.JsonSerialize(writer, Error, options: null);
             }
             if (options.Format != "W" && _serializedAdditionalRawData != null)
             {
@@ -110,7 +110,7 @@ namespace Azure.ResourceManager.Resources.Models
                     {
                         continue;
                     }
-                    error = JsonSerializer.Deserialize<ResponseError>(property.Value.GetRawText());
+                    error = ModelSerializationExtensions.JsonDeserialize<ResponseError>(property.Value.GetRawText(), options: null);
                     continue;
                 }
                 if (options.Format != "W")

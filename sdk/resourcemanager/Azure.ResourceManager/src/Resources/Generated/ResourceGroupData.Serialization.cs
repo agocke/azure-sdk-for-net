@@ -137,7 +137,7 @@ namespace Azure.ResourceManager.Resources
                     {
                         continue;
                     }
-                    systemData = JsonSerializer.Deserialize<SystemData>(property.Value.GetRawText());
+                    systemData = ModelSerializationExtensions.JsonDeserialize<SystemData>(property.Value.GetRawText(), options: null);
                     continue;
                 }
                 if (options.Format != "W")

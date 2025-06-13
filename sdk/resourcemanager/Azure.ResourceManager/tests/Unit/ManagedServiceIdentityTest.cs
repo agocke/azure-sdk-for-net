@@ -61,7 +61,9 @@ namespace Azure.ResourceManager.Tests
         public void TestDeserializerValidInnerExtraField()
         {
             var identityJsonProperty = DeserializerHelper("SystemAndUserAssignedInnerExtraField.json");
-            ManagedServiceIdentity back = ManagedServiceIdentity.DeserializeManagedServiceIdentity(identityJsonProperty.Value);
+            ManagedServiceIdentity back = ManagedServiceIdentity.DeserializeManagedServiceIdentity(identityJsonProperty.Value,
+                ModelSerializationExtensions.WireOptions,
+                ModelSerializationExtensions.Options);
             Assert.IsTrue("22fddec1-8b9f-49dc-bd72-ddaf8f215577".Equals(back.PrincipalId.ToString()));
             Assert.IsTrue("72f988bf-86f1-41af-91ab-2d7cd011db47".Equals(back.TenantId.ToString()));
             var user = back.UserAssignedIdentities;
