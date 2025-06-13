@@ -12,13 +12,14 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Xml;
 using Azure.Core;
 using Azure.ResourceManager.Models;
 
 namespace Azure.ResourceManager
 {
-    internal static class ModelSerializationExtensions
+    internal static partial class ModelSerializationExtensions
     {
         internal static readonly JsonDocumentOptions JsonDocumentOptions = new JsonDocumentOptions { MaxDepth = 256 };
         internal static readonly ModelReaderWriterOptions WireOptions = new ModelReaderWriterOptions("W");
@@ -29,8 +30,23 @@ namespace Azure.ResourceManager
             {
                 new JsonModelConverter(WireOptions, AzureResourceManagerContext.Default)
             },
+            TypeInfoResolver = DefaultSourceGenContext.Default
         };
-        internal static readonly JsonSerializerOptions OptionsUseManagedServiceIdentityV3 = new JsonSerializerOptions { Converters = { new JsonModelConverter(WireOptions, AzureResourceManagerContext.Default), new Models.ManagedServiceIdentityTypeV3Converter() } };
+        internal static readonly JsonSerializerOptions OptionsUseManagedServiceIdentityV3 = new JsonSerializerOptions
+        {
+            Converters = { new JsonModelConverter(WireOptions, AzureResourceManagerContext.Default), new Models.ManagedServiceIdentityTypeV3Converter() },
+            TypeInfoResolver = V3SourceGenContext.Default
+        };
+
+        [JsonSerializable(typeof(IJsonModel<object>))]
+        [JsonSerializable(typeof(ManagedServiceIdentityType))]
+        internal sealed partial class DefaultSourceGenContext : JsonSerializerContext
+        { }
+
+        [JsonSerializable(typeof(IJsonModel<object>))]
+        [JsonSerializable(typeof(ManagedServiceIdentityType))]
+        internal sealed partial class V3SourceGenContext : JsonSerializerContext
+        { }
 
         public static object GetObject(this JsonElement element)
         {

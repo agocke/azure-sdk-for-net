@@ -46,7 +46,7 @@ namespace Azure.ResourceManager.Models
                 foreach (var item in UserAssignedIdentities)
                 {
                     writer.WritePropertyName(item.Key);
-                    ModelSerializationExtensions.JsonSerialize(writer, item.Value, jOptions);
+                    ((IJsonModel<UserAssignedIdentity>)item.Value).Write(writer, options);
                 }
                 writer.WriteEndObject();
             }

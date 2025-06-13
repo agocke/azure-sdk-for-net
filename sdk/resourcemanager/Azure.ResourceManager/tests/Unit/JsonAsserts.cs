@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Text;
 using System.Text.Json;
@@ -29,6 +30,20 @@ namespace Azure.ResourceManager.Tests
             using (var writer = new Utf8JsonWriter(memoryStream))
             {
                 JsonSerializer.Serialize(writer, model, options);
+            }
+
+            var text = Encoding.UTF8.GetString(memoryStream.ToArray());
+
+            Assert.AreEqual(expected, text);
+        }
+
+        public static void AssertConverterSerialization(string expected, Action<Utf8JsonWriter, JsonSerializerOptions> write, JsonSerializerOptions options = default)
+        {
+            using var memoryStream = new MemoryStream();
+
+            using (var writer = new Utf8JsonWriter(memoryStream))
+            {
+                write(writer, options);
             }
 
             var text = Encoding.UTF8.GetString(memoryStream.ToArray());

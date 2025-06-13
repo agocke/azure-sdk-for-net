@@ -1,8 +1,8 @@
 using System;
+using System.ClientModel.Primitives;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.Json;
 using Azure.Core;
 using Azure.ResourceManager.Models;
@@ -144,8 +144,7 @@ namespace Azure.ResourceManager.Tests
         public void TestDeserializerValidSystemAndUserAssigned()
         {
             var identityJsonProperty = DeserializerHelper("SystemAndUserAssignedValid.json");
-            ManagedServiceIdentity back = ManagedServiceIdentity.DeserializeManagedServiceIdentity(identityJsonProperty.Value);
-            //ManagedServiceIdentity back = JsonSerializer.Deserialize<ManagedServiceIdentity>(identityJsonProperty.Value.ToString());
+            ManagedServiceIdentity back = ManagedServiceIdentity.DeserializeManagedServiceIdentity(identityJsonProperty.Value, ModelSerializationExtensions.WireOptions, ModelSerializationExtensions.Options);
             Assert.IsTrue("22fdaec1-8b9f-49dc-bd72-ddaf8f215577".Equals(back.PrincipalId.ToString()));
             Assert.IsTrue("72f988af-86f1-41af-91ab-2d7cd011db47".Equals(back.TenantId.ToString()));
             var user = back.UserAssignedIdentities;
@@ -202,8 +201,12 @@ namespace Azure.ResourceManager.Tests
                 "\"userAssignedIdentities\":" +
                 "{" + "\"/subscriptions/db1ab6f0-4769-4aa7-930e-01e2ef9c123c/resourceGroups/tester/providers/Microsoft.ManagedIdentity/userAssignedIdentities/testidentity\":" +
                 user + "}}";
-            var serializeOptions = new JsonSerializerOptions { Converters = { new ManagedServiceIdentityTypeV3Converter() } };
-            JsonAsserts.AssertConverterSerialization(expected, identity, serializeOptions);
+            var serializeOptions = new JsonSerializerOptions
+            {
+                Converters = { new JsonModelConverter(ModelSerializationExtensions.WireOptions, AzureResourceManagerContext.Default), new ManagedServiceIdentityTypeV3Converter() },
+            };
+            serializeOptions = ModelSerializationExtensions.OptionsUseManagedServiceIdentityV3;
+            JsonAsserts.AssertConverterSerialization(expected, (writer, jOptions) => identity.Write(writer, options: ModelSerializationExtensions.WireOptions, jOptions), serializeOptions);
         }
 
         [TestCase]
